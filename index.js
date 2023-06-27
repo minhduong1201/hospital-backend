@@ -26,6 +26,7 @@ mongoose
     console.log(err);
   });
 
+  
 app.use(express.json());
 app.use('/api/auth', authRoute);
 app.use('/api/employees', employeeRoute);
