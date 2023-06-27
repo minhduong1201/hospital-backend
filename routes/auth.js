@@ -3,7 +3,7 @@ const Customer = require("../models/Customer");
 const Employee = require("../models/Employee");
 const CryptoJS = require("crypto-js"); //cho password
 const jwt = require("jsonwebtoken");
-let {uuid} = require('uuidv4');
+let { uuid } = require("uuidv4");
 let multer = require("multer");
 const DIR = "./public/";
 
@@ -59,7 +59,6 @@ router.post("/register/employee", upload.single("img"), async (req, res) => {
     res.status(500).json(err);
   }
 });
-
 // LOGIN EMPLOYEE
 router.post("/login/employee", async (req, res) => {
   console.log(req.body);
@@ -132,14 +131,16 @@ router.post("/login/customer", async (req, res) => {
   try {
     const user = await Customer.findOne({ username: req.body.username });
     console.log(user);
-    //    !user&&res.status(401).json("Sai tên tài khoản!")
+    if (!user) {
+      return res.status(401).json("Sai tên tài khoản!");
+    }
     const hashedPassword = CryptoJS.AES.decrypt(
       user.password,
       process.env.PASS_SEC
     );
     const OriginalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
-    OriginalPassword !== req.body.password &&
-      res.status(401).json("Nhập sai mật khẩu!");
+    if(OriginalPassword !== req.body.password)
+      return res.status(401).json("Nhập sai mật khẩu!");
     const accessToken = jwt.sign(
       {
         id: user._id,
