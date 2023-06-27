@@ -59,6 +59,7 @@ router.post("/register/employee", upload.single("img"), async (req, res) => {
     res.status(500).json(err);
   }
 });
+
 // LOGIN EMPLOYEE
 router.post("/login/employee", async (req, res) => {
   console.log(req.body);
