@@ -44,7 +44,7 @@ router.post("/register/employee", upload.single("img"), async (req, res) => {
     age: req.body.age,
     role: req.body.role,
     email: req.body.email,
-    img: url + "/public/" + req.file.filename,
+    img: req.file ? url + "/public/" + req.file.filename : "",
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.PASS_SEC
@@ -110,7 +110,7 @@ router.post("/register/customer", upload.single("img"), async (req, res) => {
     role: req.body.role,
     email: req.body.email,
     hospitalId: req.body.hospitalId,
-    img: url + "/public/" + req.file.filename,
+    img: req.file ? url + "/public/" + req.file.filename : "",
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.PASS_SEC
