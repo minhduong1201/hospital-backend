@@ -62,7 +62,6 @@ router.post("/register/employee", upload.single("img"), async (req, res) => {
 
 // LOGIN EMPLOYEE
 router.post("/login/employee", async (req, res) => {
-  console.log(req.body);
   try {
     const user = await Employee.findOne({ username: req.body.username });
     console.log(user);
@@ -92,6 +91,7 @@ router.post("/login/employee", async (req, res) => {
 
     res.status(200).json({ ...others, accessToken });
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });

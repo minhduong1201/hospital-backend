@@ -4,6 +4,8 @@ const Hospital=require("../models/Hospital")
 
 //POST
 router.post("/",verifyToken,async(req,res)=>{
+    const exist = await Hospital.findOne({name: req.body.name});
+    if (exist) return res.status(500).json("Đã tồn tại bệnh viện này!")
     const newHospital=new Hospital(req.body)
    
     try{
@@ -43,7 +45,7 @@ router.delete("/:id",verifyTokenandAuthorization,async(req,res)=>{
     }
 });
 
-//GET USER
+//GET Hospital by id
 router.get("/:id",async(req,res)=>{
     try{
         const user=await Hospital.findById(req.params.id);
@@ -53,42 +55,27 @@ router.get("/:id",async(req,res)=>{
     }
 });
 
-//GET ALL USER
-router.get("/",verifyTokenandAdmin,async(req,res)=>{
-    const query=req.query.new
+//GET Hospital by name
+router.get("/name/:name",async(req,res)=>{
     try{
-        const users=query
-        ?await Hospital.find().sort({_id:-1}).limit(5)
-        : await Hospital.find();
-        res.status(200).json(users);
+        const hospital=await Hospital.findOne({name: req.params.name});
+        res.status(200).json(hospital);
     }catch(err){
         res.status(500).json(err );
     }
 });
 
-//GET USER STATS
-router.get("/stats",verifyTokenandAdmin,async(req,res)=>{
-    const date=new Date();
-    const lastYear=new Date(date.setFullYear(date.getFullYear()-1));
-try{
-  const data=await Hospital.aggregate([
-      {$match:{createAt:{$gte:lastYear}}},
-      {
-        $project:{
-            month:{$month:"$createdAt"},
-        },  
-      },
-      {
-          $group:{
-              _id:"$month",
-              total:{$sum: 1},
-          },
-      },
-  ]);
-  res.status(200).json(data)
-}catch(err){
-    res.status(500).json(err);
-}
+//GET ALL Hospital
+router.get("/",verifyTokenandAdmin,async(req,res)=>{
+    const query=req.query.new
+    try{
+        const hospitals=query
+        ?await Hospital.find().sort({_id:-1}).limit(5)
+        : await Hospital.find();
+        res.status(200).json(hospitals);
+    }catch(err){
+        res.status(500).json(err );
+    }
 });
 
 module.exports=router
