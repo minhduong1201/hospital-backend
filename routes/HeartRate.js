@@ -17,7 +17,7 @@ async(req,res)=>{
 })
 
 // GET LAST HEART_RATE
-router.get("/:userId", verifyToken, async (req, res) => {
+router.get("/:userId", async (req, res) => {
     const { userId } = req.params;
   
     try {
